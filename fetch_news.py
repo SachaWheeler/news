@@ -27,6 +27,13 @@ def fetch_latest_headlines():
     else:
         raise Exception(f"Error fetching data from NewsAPI: {response.status_code}")
 
+# Function to clean and preprocess the headline text
+def preprocess_headline(headline):
+    # Remove commas, hyphens, single and double quotes
+    cleaned_headline = headline.replace(',', ''
+            ).replace('-', ' ').replace('"', '').replace("'", '').replace('?', '')
+    return cleaned_headline
+
 # Initialize or connect to SQLite database
 def init_db():
     conn = sqlite3.connect(DB_PATH)
@@ -47,10 +54,12 @@ def save_headlines_to_db(headlines):
     cursor = conn.cursor()
 
     for headline in headlines:
+        # Preprocess the headline before saving
+        cleaned_headline = preprocess_headline(headline)
         cursor.execute('''
             INSERT INTO headlines (headline)
             SELECT ? WHERE NOT EXISTS(SELECT 1 FROM headlines WHERE headline = ?)
-        ''', (headline, headline))
+        ''', (cleaned_headline, cleaned_headline))
 
     conn.commit()
     conn.close()

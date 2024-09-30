@@ -3,6 +3,8 @@ import os
 import sqlite3
 import requests
 import nltk
+import re
+import string
 from datetime import datetime
 from nltk.util import ngrams
 
@@ -22,7 +24,7 @@ def fetch_latest_headlines():
     if response.status_code == 200:
         data = response.json()
         articles = data.get('articles', [])
-        headlines = [article['title'] for article in articles if 'title' in article]
+        headlines = [preprocess_headline(article['title']) for article in articles if 'title' in article]
         return headlines
     else:
         raise Exception(f"Error fetching data from NewsAPI: {response.status_code}")
@@ -30,9 +32,9 @@ def fetch_latest_headlines():
 # Function to clean and preprocess the headline text
 def preprocess_headline(headline):
     # Remove commas, hyphens, single and double quotes
-    cleaned_headline = headline.replace(',', ''
-            ).replace('-', ' ').replace('"', '').replace("'", '').replace('?', '')
-    return cleaned_headline
+    new_headline = re.sub(r'[^A-Za-z0-9\s]', '', headline)
+
+    return new_headline
 
 # Initialize or connect to SQLite database
 def init_db():
@@ -55,11 +57,11 @@ def save_headlines_to_db(headlines):
 
     for headline in headlines:
         # Preprocess the headline before saving
-        cleaned_headline = preprocess_headline(headline)
+        # cleaned_headline = preprocess_headline(headline)
         cursor.execute('''
             INSERT INTO headlines (headline)
             SELECT ? WHERE NOT EXISTS(SELECT 1 FROM headlines WHERE headline = ?)
-        ''', (cleaned_headline, cleaned_headline))
+        ''', (headline, headline))
 
     conn.commit()
     conn.close()

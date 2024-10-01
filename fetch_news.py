@@ -32,7 +32,7 @@ def fetch_latest_headlines():
 # Function to clean and preprocess the headline text
 def preprocess_headline(headline):
     # Remove commas, hyphens, single and double quotes
-    new_headline = re.sub(r'[^A-Za-z0-9\s]', '', headline)
+    new_headline = re.sub(r'[^A-Za-z0-9\s]', '', headline.rpartition('-')[0].strip())
 
     return new_headline
 

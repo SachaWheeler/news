@@ -6,13 +6,14 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import re
+from api_key import API_KEY
 
 # Download stopwords (run this once)
 nltk.download('stopwords')
 nltk.download('punkt')
 
 # Set up NewsAPI client
-api = NewsApiClient(api_key='131c1ddfd3104c10a57607a77fa15ecb')
+api = NewsApiClient(api_key=API_KEY)
 
 # Connect to SQLite database
 conn = sqlite3.connect('headlines_2.db')

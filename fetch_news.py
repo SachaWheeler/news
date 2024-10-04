@@ -13,7 +13,9 @@ nltk.download('punkt')
 
 # API Key for NewsAPI
 API_KEY = '131c1ddfd3104c10a57607a77fa15ecb'
-NEWS_API_URL = 'https://newsapi.org/v2/top-headlines?country=us&pageSize=100&apiKey=' + API_KEY
+NEWS_API = "https://newsapi.org/v2/top-headlines"
+COUNTRY = "us"
+NEWS_API_URL = f'{NEWS_API}?country={COUNTRY}&pageSize=100&apiKey={API_KEY}'
 
 # SQLite DB path
 DB_PATH = 'headlines.db'

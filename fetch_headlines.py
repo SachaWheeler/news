@@ -14,6 +14,7 @@ def fetch_headlines():
         'category': 'general',
         'language': 'en',
         'pageSize': 100,  # Maximum number of results
+        # 'sources': 'bbc-news',
         'page': 1,        # Page of results to fetch
     }
     response = requests.get(url, params=params)
@@ -36,13 +37,13 @@ def save_headlines_to_db(headlines):
 
     # Insert headlines into the table, ignoring if already present (based on timestamp)
     for article in headlines:
-        title = re.sub( r'[^A-Za-z0-9\s-]', '',
+        if "-" in article['title']:
+            title = re.sub( r'[^A-Za-z0-9\s-]', '',
                 article['title'].rpartition('-')[0].rstrip())
+        else:
+            title = article['title']
         if not headline_exists(c, title):
             publication = article['source']['name'].strip()
-            print(title)
-            print(publication)
-            print("")
             c.execute('''INSERT OR IGNORE INTO headlines (title, publication, timestamp)
                     VALUES (?, ?, ?)''',
                     (title, publication, current_time))
@@ -52,5 +53,6 @@ def save_headlines_to_db(headlines):
 
 # Fetch and save headlines every hour
 headlines = fetch_headlines()
+# print(headlines)
 save_headlines_to_db(headlines)
 

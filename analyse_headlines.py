@@ -15,8 +15,8 @@ def fetch_todays_headlines():
 
     # Get today's headlines
     today = datetime.now().strftime('%Y-%m-%d')
-    # c.execute("SELECT title FROM headlines WHERE publishedAt LIKE ?", (today + '%',))
-    c.execute("SELECT title FROM headlines ")
+    # c.execute("SELECT title FROM headlines ")
+    c.execute("SELECT title, publication FROM headlines WHERE DATE(timestamp) = ?", (today,))
     rows = c.fetchall()
     # print(rows)
 

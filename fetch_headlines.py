@@ -26,7 +26,9 @@ def save_headlines_to_db(headlines):
 
     # Create a table if it doesn't exist
     c.execute('''CREATE TABLE IF NOT EXISTS headlines
-                 (title TEXT, publication TEXT, publishedAt TEXT UNIQUE)''')
+                 (title TEXT, publication TEXT, timestamp DATETIME)''')
+
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Insert headlines into the table, ignoring if already present (based on timestamp)
     for article in headlines:
@@ -36,9 +38,9 @@ def save_headlines_to_db(headlines):
         print(title)
         print(publication)
         print("")
-        c.execute('''INSERT OR IGNORE INTO headlines (title, publication, publishedAt)
+        c.execute('''INSERT OR IGNORE INTO headlines (title, publication, timestamp)
                      VALUES (?, ?, ?)''',
-                  (title, publication, article['publishedAt']))
+                  (title, publication, current_time))
 
     conn.commit()
     conn.close()

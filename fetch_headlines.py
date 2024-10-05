@@ -19,6 +19,10 @@ def fetch_headlines():
     response = requests.get(url, params=params)
     return response.json()['articles']
 
+def headline_exists(c, title):
+    c.execute("SELECT 1 FROM headlines WHERE title = ?", (title,))
+    return c.fetchone() is not None
+
 # Function to save headlines to SQLite database
 def save_headlines_to_db(headlines):
     conn = sqlite3.connect('headlines.db')
@@ -34,13 +38,14 @@ def save_headlines_to_db(headlines):
     for article in headlines:
         title = re.sub( r'[^A-Za-z0-9\s-]', '',
                 article['title'].rpartition('-')[0].rstrip())
-        publication = article['source']['name'].strip()
-        print(title)
-        print(publication)
-        print("")
-        c.execute('''INSERT OR IGNORE INTO headlines (title, publication, timestamp)
-                     VALUES (?, ?, ?)''',
-                  (title, publication, current_time))
+        if not headline_exists(c, title):
+            publication = article['source']['name'].strip()
+            print(title)
+            print(publication)
+            print("")
+            c.execute('''INSERT OR IGNORE INTO headlines (title, publication, timestamp)
+                    VALUES (?, ?, ?)''',
+                    (title, publication, current_time))
 
     conn.commit()
     conn.close()

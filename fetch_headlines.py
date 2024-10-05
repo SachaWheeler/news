@@ -43,6 +43,7 @@ def save_headlines_to_db(headlines):
         else:
             title = article['title']
         if not headline_exists(c, title):
+            print(f"adding '{title}'")
             publication = article['source']['name'].strip()
             c.execute('''INSERT OR IGNORE INTO headlines (title, publication, timestamp)
                     VALUES (?, ?, ?)''',

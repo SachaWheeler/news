@@ -33,12 +33,11 @@ def find_popular_words(headlines):
             for word in words
             if word not in stop_words and word.isalpha() and len(word) > 2]
 
-    print(words)
-    return Counter(words).most_common(20)
+    # return Counter(words).most_common(20)
     counter = Counter(words)
 
     # Filter out items with a count of 1 or less
-    return Counter({item: count for item, count in counter.items() if count > 1})
+    return Counter({item: count for item, count in counter.items() if count > 1}).most_common(20)
 
 
 # Fetch headlines and find the top 10 popular words

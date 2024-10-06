@@ -64,7 +64,7 @@ while True:
         break
 
     # Print the 20 most common words
-    print("Top 20 words for", today)
+    print("Top words for", day_formatted)
     for word, count in top_words:
         for _ in range(count):
             all_words.append(word)

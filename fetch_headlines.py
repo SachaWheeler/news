@@ -3,9 +3,11 @@ import requests
 import sqlite3
 from datetime import datetime
 from api_key import API_KEY
+from pygooglenews import GoogleNews
 import re
 
 # Function to fetch headlines using NewsAPI
+"""
 def fetch_headlines():
     api_key = API_KEY
     url = "https://newsapi.org/v2/top-headlines"
@@ -19,6 +21,23 @@ def fetch_headlines():
     }
     response = requests.get(url, params=params)
     return response.json()['articles']
+"""
+
+def fetch_headlines():
+    gn = GoogleNews(lang='en', country='UK')  # You can change the language or country as needed
+    top_news = gn.top_news()  # Fetch top news
+
+    # Extract the headlines and links from the returned feed
+    articles = []
+    for entry in top_news['entries']:
+        title = entry.title
+        publication = entry.source
+        articles.append({
+            'title': title,
+            'publication': publication
+        })
+
+    return articles
 
 def headline_exists(c, title):
     c.execute("SELECT 1 FROM headlines WHERE title = ?", (title,))
@@ -43,8 +62,8 @@ def save_headlines_to_db(headlines):
         else:
             title = article['title']
         if not headline_exists(c, title):
-            print(f"adding '{title}'")
-            publication = article['source']['name'].strip()
+            publication = article['publication']['title']
+            print(f"adding '{title}' from {publication}")
             c.execute('''INSERT OR IGNORE INTO headlines (title, publication, timestamp)
                     VALUES (?, ?, ?)''',
                     (title, publication, current_time))

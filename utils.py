@@ -9,7 +9,7 @@ my_stopwords = [
     'fantasy',
     'week',
     'says',
-    'israel',
+    'israel', 'israeli',
     'football',
     'could',
     'see',

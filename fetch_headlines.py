@@ -9,8 +9,8 @@ from utils import my_sources
 
 
 def fetch_headlines():
-    gn = GoogleNews(lang='en', country='UK')  # You can change the language or country as needed
-    # top_news = gn.topic_headlines('WORLD')  # Fetch top news
+    gn = GoogleNews(lang='en', country='UK')
+    # top_news = gn.topic_headlines('WORLD')
     top_news = gn.top_news()  # Fetch top news
 
     articles = []

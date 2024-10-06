@@ -26,19 +26,21 @@ def fetch_headlines():
 
 def fetch_headlines():
     gn = GoogleNews(lang='en', country='UK')  # You can change the language or country as needed
-    #top_news = gn.topic_headlines('SCIENCE')  # Fetch top news
+    # top_news = gn.topic_headlines('WORLD')  # Fetch top news
     top_news = gn.top_news()  # Fetch top news
 
     # Extract the headlines and links from the returned feed
     articles = []
     for entry in top_news['entries']:
         title = entry.title
-        publication = entry.source
-        if publication['title'] in my_sources:
+        publication = entry.source.title
+        if publication in my_sources:
             articles.append({
-                'title': title.replace(publication['title'], '').strip(),
+                'title': title.replace(publication, '').strip(),
                 'publication': publication
             })
+        else:
+            print("- skipping", publication, title)
 
     return articles
 
@@ -61,7 +63,7 @@ def save_headlines_to_db(headlines):
     for article in headlines:
         title = re.sub( r'[^A-Za-z0-9\s-]', '', article['title'].rpartition('-')[0].rstrip())
         if not headline_exists(c, title):
-            publication = article['publication']['title']
+            publication = article['publication']
             print(f"adding '{title}' from {publication}")
             c.execute('''INSERT OR IGNORE INTO headlines (title, publication, timestamp)
                     VALUES (?, ?, ?)''',

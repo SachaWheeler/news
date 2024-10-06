@@ -4,6 +4,7 @@ from nltk.corpus import stopwords
 from collections import Counter
 import sqlite3
 from datetime import datetime
+from utils import my_stopwords
 
 # Download NLTK stopwords if you haven't already
 nltk.download('stopwords')
@@ -16,7 +17,7 @@ def fetch_todays_headlines():
     # Get today's headlines
     today = datetime.now().strftime('%Y-%m-%d')
     # c.execute("SELECT title FROM headlines ")
-    c.execute("SELECT title, publication FROM headlines WHERE timestamp >= datetime('now', '-6 hours')")
+    c.execute("SELECT title, publication FROM headlines WHERE timestamp >= datetime('now', '-12 hours')")
     rows = c.fetchall()
     # print(rows)
 
@@ -25,7 +26,7 @@ def fetch_todays_headlines():
 
 # Function to find popular words excluding stopwords
 def find_popular_words(headlines):
-    stop_words = set(stopwords.words('english'))
+    stop_words = set(stopwords.words('english') + my_stopwords)
     words = ' '.join(headlines).lower().split()
 
     # Remove punctuation and stopwords

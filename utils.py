@@ -23,3 +23,5 @@ my_sources = [
     'ITV News',
     'SciTechDaily',
 ]
+
+MIN_WORD_LENGTH = 4

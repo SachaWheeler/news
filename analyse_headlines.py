@@ -4,7 +4,7 @@ from nltk.corpus import stopwords
 from collections import Counter
 import sqlite3
 from datetime import datetime
-from utils import my_stopwords
+from utils import my_stopwords, MIN_WORD_LENGTH
 
 # Download NLTK stopwords if you haven't already
 nltk.download('stopwords')
@@ -32,7 +32,7 @@ def find_popular_words(headlines):
     # Remove punctuation and stopwords
     words = [word.strip('.,!?\"\'')
             for word in words
-            if word not in stop_words and word.isalpha() and len(word) > 2]
+            if word not in stop_words and word.isalpha() and len(word) >= MIN_WORD_LENGTH]
 
     # return Counter(words).most_common(20)
     counter = Counter(words)

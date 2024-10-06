@@ -5,7 +5,7 @@ import string
 import nltk
 from nltk.corpus import stopwords
 from datetime import datetime, timedelta
-from utils import my_stopwords
+from utils import my_stopwords, MIN_WORD_LENGTH
 
 # Ensure stopwords are downloaded
 nltk.download('stopwords')
@@ -35,7 +35,7 @@ def clean_and_tokenize_headlines(headlines):
         cleaned = headline.translate(str.maketrans('', '', string.punctuation))
         # Split into words and filter out stopwords
         words += [word.lower() for word in cleaned.split()
-                if word.lower() not in stop_words and word.isalpha() and len(word) > 2]
+                if word.lower() not in stop_words and word.isalpha() and len(word) >= MIN_WORD_LENGTH]
     return words
 
 # Function to find the x most common words from the headlines of a day

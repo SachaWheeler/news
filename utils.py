@@ -15,3 +15,13 @@ my_stopwords = [
     'see',
     'video',
 ]
+
+my_sources = [
+    'The Telegraph',
+    'The Guardian',
+    'The Independent',
+    'BBC',
+    'BBC.com',
+    'ITV News',
+    'SciTechDaily',
+]

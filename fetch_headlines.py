@@ -5,6 +5,7 @@ from datetime import datetime
 from api_key import API_KEY
 from pygooglenews import GoogleNews
 import re
+from utils import my_sources
 
 # Function to fetch headlines using NewsAPI
 """
@@ -25,6 +26,7 @@ def fetch_headlines():
 
 def fetch_headlines():
     gn = GoogleNews(lang='en', country='UK')  # You can change the language or country as needed
+    #top_news = gn.topic_headlines('SCIENCE')  # Fetch top news
     top_news = gn.top_news()  # Fetch top news
 
     # Extract the headlines and links from the returned feed
@@ -32,10 +34,11 @@ def fetch_headlines():
     for entry in top_news['entries']:
         title = entry.title
         publication = entry.source
-        articles.append({
-            'title': title,
-            'publication': publication
-        })
+        if publication['title'] in my_sources:
+            articles.append({
+                'title': title.replace(publication['title'], '').strip(),
+                'publication': publication
+            })
 
     return articles
 
@@ -56,11 +59,7 @@ def save_headlines_to_db(headlines):
 
     # Insert headlines into the table, ignoring if already present (based on timestamp)
     for article in headlines:
-        if "-" in article['title']:
-            title = re.sub( r'[^A-Za-z0-9\s-]', '',
-                article['title'].rpartition('-')[0].rstrip())
-        else:
-            title = article['title']
+        title = re.sub( r'[^A-Za-z0-9\s-]', '', article['title'].rpartition('-')[0].rstrip())
         if not headline_exists(c, title):
             publication = article['publication']['title']
             print(f"adding '{title}' from {publication}")

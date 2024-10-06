@@ -1,5 +1,6 @@
 my_stopwords = [
-    'trump', 'biden',
+    'live',
+    'trump', 'boris',
     'rape',
     'us',
     'new',

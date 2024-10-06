@@ -17,7 +17,8 @@ def fetch_todays_headlines():
     # Get today's headlines
     today = datetime.now().strftime('%Y-%m-%d')
     # c.execute("SELECT title FROM headlines ")
-    c.execute("SELECT title, publication FROM headlines WHERE timestamp >= datetime('now', '-12 hours')")
+    c.execute("SELECT title, publication FROM headlines WHERE \
+            timestamp >= datetime('now', '-12 hours')")
     rows = c.fetchall()
     # print(rows)
 
@@ -32,7 +33,9 @@ def find_popular_words(headlines):
     # Remove punctuation and stopwords
     words = [word.strip('.,!?\"\'')
             for word in words
-            if word not in stop_words and word.isalpha() and len(word) >= MIN_WORD_LENGTH]
+            if word not in stop_words
+            and word.isalpha()
+            and len(word) >= MIN_WORD_LENGTH]
 
     # return Counter(words).most_common(20)
     counter = Counter(words)

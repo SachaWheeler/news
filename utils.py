@@ -1,8 +1,9 @@
 my_stopwords = [
     'live', 'latest', 'like', 'almost', 'wheres',
     'trump', 'boris', 'tory', 'tories',
-    'rape',
-    'us',
+    'attempt', 'first', 'johnson', 'show', 'join', 'involves',
+    'site', 'rape', 'protest', 'city', 'year', 'search', 'home',
+    'us','thousands',
     'new', 'jobs', 'report', 'crisis',
     'week',
     'says',

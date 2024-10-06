@@ -17,8 +17,8 @@ def fetch_headlines_for_day(day):
     c = conn.cursor()
 
     # Fetch all headlines for the given day
-    c.execute('''SELECT title FROM headlines''')
-                 # WHERE date(timestamp) = ?''', (day,))
+    c.execute('''SELECT title FROM headlines
+                 WHERE date(timestamp) = ?''', (day,))
 
     rows = c.fetchall()
     conn.close()
@@ -54,6 +54,7 @@ def find_top_words_for_day(day):
 # Example usage: Find the top words for today's headlines
 today = datetime.now()
 days=0
+all_words = []
 while True:
     day = today - timedelta(days=days)
     day_formatted = day.strftime('%Y-%m-%d')
@@ -65,6 +66,13 @@ while True:
     # Print the 20 most common words
     print("Top 20 words for", today)
     for word, count in top_words:
+        for _ in range(count):
+            all_words.append(word)
         print(f"{word}: {count}")
     days += 1
-    break
+
+print("--------------------")
+all_counter = Counter(all_words).most_common()
+for word, count in all_counter:
+    print(f"{word}: {count}")
+

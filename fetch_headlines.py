@@ -12,6 +12,7 @@ def fetch_headlines():
     gn = GoogleNews(lang='en', country='UK')
     # top_news = gn.topic_headlines('WORLD')
     top_news = gn.top_news()  # Fetch top news
+    print(top_news)
 
     articles = []
     for entry in top_news['entries']:

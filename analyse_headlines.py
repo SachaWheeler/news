@@ -18,7 +18,7 @@ def fetch_todays_headlines():
     today = datetime.now().strftime('%Y-%m-%d')
     # c.execute("SELECT title FROM headlines ")
     c.execute("SELECT title, publication FROM headlines WHERE \
-            timestamp >= datetime('now', '-2 hours')")
+            timestamp >= datetime('now', '-12 hours')")
     rows = c.fetchall()
     # print(rows)
 

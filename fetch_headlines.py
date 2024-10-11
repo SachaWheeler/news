@@ -1,18 +1,24 @@
 #!/usr/bin/env python
 import requests
 import sqlite3
-from datetime import datetime
-# from api_key import API_KEY
+from datetime import datetime, timedelta
 from pygooglenews import GoogleNews
 import re
+import string
+import nltk
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from utils import my_sources
 
 
+stop_words = set(nltk.corpus.stopwords.words('english'))
+
 def fetch_headlines():
     gn = GoogleNews(lang='en', country='UK')
-    # top_news = gn.topic_headlines('WORLD')
+    # top_news = gn.topic_headlines('NATION')
+    # top_news = gn.geo_headlines('London')
     top_news = gn.top_news()  # Fetch top news
-    print(top_news)
+    # print(top_news)
 
     articles = []
     for entry in top_news['entries']:
@@ -24,13 +30,66 @@ def fetch_headlines():
                 'publication': publication
             })
         else:
-            print("- skipping", publication, title)
+            pass
+            # print("- skipping", publication, title)
 
     return articles
 
+"""
 def headline_exists(c, title):
     c.execute("SELECT 1 FROM headlines WHERE title = ?", (title,))
     return c.fetchone() is not None
+"""
+
+def clean_headline(headline):
+    # Remove punctuation and convert to lowercase
+    cleaned = headline.translate(str.maketrans('', '', string.punctuation)).lower()
+    # Remove stopwords
+    cleaned_words = [word for word in cleaned.split() if word not in stop_words]
+    return ' '.join(cleaned_words)
+
+def fetch_previous_day_headlines(c):
+
+    # yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    # c.execute('''SELECT title FROM headlines WHERE date(timestamp) = ?''', (yesterday,))
+
+    c.execute("SELECT title FROM headlines WHERE \
+            timestamp >= datetime('now', '-24 hours')")
+
+    rows = c.fetchall()
+
+    # Return a list of headline strings
+    return [row[0] for row in rows]
+
+
+def headline_exists(c, current_headline):
+    # Fetch and clean previous day headlines
+    previous_day_headlines = fetch_previous_day_headlines(c)
+    cleaned_previous_headlines = [clean_headline(h) for h in previous_day_headlines]
+
+    # Clean the current headline
+    cleaned_current_headline = clean_headline(current_headline)
+
+    # Vectorize the previous day's headlines and the current headline
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(cleaned_previous_headlines + [cleaned_current_headline])
+
+    # Extract the vector of the current headline (last row)
+    current_vector = tfidf_matrix[-1]
+
+    # Compute cosine similarity between the current headline and each previous headline
+    try:
+        similarities = cosine_similarity(current_vector, tfidf_matrix[:-1])
+    except:  # in case we don't have enough records
+        return False
+
+    # Check if all similarities are less than 0.5
+    for sim in similarities[0]:
+        if sim >= 0.5:
+            return True  # Similar headline exists
+
+    return False  # No similar headlines found
+
 
 def save_headlines_to_db(headlines):
     conn = sqlite3.connect('headlines.db')

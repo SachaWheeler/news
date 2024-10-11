@@ -8,10 +8,10 @@ import string
 import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from utils import my_sources
+from utils import my_stopwords, my_sources, MIN_WORD_LENGTH
 
 
-stop_words = set(nltk.corpus.stopwords.words('english'))
+stop_words = set(nltk.corpus.stopwords.words('english') + my_stopwords)
 
 def fetch_headlines():
     gn = GoogleNews(lang='en', country='UK')
@@ -30,8 +30,8 @@ def fetch_headlines():
                 'publication': publication
             })
         else:
-            pass
-            # print("- skipping", publication, title)
+            # pass
+            print("- skipping", publication, title)
 
     return articles
 
@@ -45,7 +45,8 @@ def clean_headline(headline):
     # Remove punctuation and convert to lowercase
     cleaned = headline.translate(str.maketrans('', '', string.punctuation)).lower()
     # Remove stopwords
-    cleaned_words = [word for word in cleaned.split() if word not in stop_words]
+    cleaned_words = [word for word in cleaned.split()
+            if word not in stop_words and len(word) >= MIN_WORD_LENGTH]
     return ' '.join(cleaned_words)
 
 def fetch_previous_day_headlines(c):
@@ -85,7 +86,7 @@ def headline_exists(c, current_headline):
 
     # Check if all similarities are less than 0.5
     for sim in similarities[0]:
-        if sim >= 0.5:
+        if sim >= 0.6:
             return True  # Similar headline exists
 
     return False  # No similar headlines found

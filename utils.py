@@ -1,20 +1,17 @@
 my_stopwords = [
     'live', 'latest', 'like', 'almost', 'wheres',
-    'trump', 'boris', 'tory', 'tories',
+    'trump', 'boris', 'johnson', 'tory', 'tories',
     'elon', 'musk', 'tesla',
-    'attempt', 'first', 'johnson', 'show', 'join', 'involves',
-    'site', 'rape', 'protest', 'paedophile',
+    'attempt', 'first', 'show', 'join', 'involves', 'site',
+    'rape', 'protest', 'paedophile',
     'city', 'year', 'search', 'home',
     'us','thousands',
     'new', 'jobs', 'report', 'crisis',
-    'week',
-    'says',
     'israel', 'israeli', 'jew',
     'pakistan',
     'fantasy', 'football', 'cricket', 'rugby', 'league',
     'could', 'might',
-    'see', 'man',
-    'video',
+    'see', 'man', 'week', 'says', 'video',
 ]
 
 my_sources = [

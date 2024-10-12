@@ -8,7 +8,7 @@ import string
 import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from utils import my_stopwords, my_sources, MIN_WORD_LENGTH
+from utils import my_stopwords, my_sources, MIN_WORD_LENGTH, HOURS_WINDOW
 
 
 stop_words = set(nltk.corpus.stopwords.words('english') + my_stopwords)
@@ -54,8 +54,8 @@ def fetch_previous_day_headlines(c):
     # yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     # c.execute('''SELECT title FROM headlines WHERE date(timestamp) = ?''', (yesterday,))
 
-    c.execute("SELECT title FROM headlines WHERE \
-            timestamp >= datetime('now', '-24 hours')")
+    c.execute(f"SELECT title FROM headlines WHERE \
+            timestamp >= datetime('now', '-{HOURS_WINDOW} hours')")
 
     rows = c.fetchall()
 

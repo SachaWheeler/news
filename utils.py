@@ -26,3 +26,4 @@ my_sources = [
 ]
 
 MIN_WORD_LENGTH = 4
+HOURS_WINDOW = 24

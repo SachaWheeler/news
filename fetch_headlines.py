@@ -30,8 +30,8 @@ def fetch_headlines():
                 'publication': publication
             })
         else:
-            # pass
-            print("- skipping", publication, title)
+            pass
+            # print("- skipping", publication, title)
 
     return articles
 
@@ -105,12 +105,14 @@ def save_headlines_to_db(headlines):
     # Insert new headlines into the table
     for article in headlines:
         title = re.sub( r'[^A-Za-z0-9\s-]', '', article['title'].rpartition('-')[0].rstrip())
+        publication = article['publication']
         if not headline_exists(c, title):
-            publication = article['publication']
             print(f"adding '{title}' from {publication}")
             c.execute('''INSERT OR IGNORE INTO headlines
                 (title, publication, timestamp) VALUES (?, ?, ?)''',
                 (title, publication, current_time))
+        else:
+            print(f"skipping '{title}' from {publication}")
 
     conn.commit()
     conn.close()

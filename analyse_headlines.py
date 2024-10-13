@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-import nltk
-from nltk.corpus import stopwords
+# import nltk
+# from nltk.corpus import stopwords
 from collections import Counter
 import sqlite3
 from datetime import datetime
-from utils import my_stopwords, MIN_WORD_LENGTH, HOURS_WINDOW
+from utils import stop_words, MIN_WORD_LENGTH, HOURS_WINDOW
 
 # Download NLTK stopwords if you haven't already
-nltk.download('stopwords')
+# nltk.download('stopwords')
 
 # Function to fetch today's headlines from the DB
 def fetch_todays_headlines():
@@ -27,7 +27,6 @@ def fetch_todays_headlines():
 
 # Function to find popular words excluding stopwords
 def find_popular_words(headlines):
-    stop_words = set(stopwords.words('english') + my_stopwords)
     words = ' '.join(headlines).lower().split()
 
     # Remove punctuation and stopwords

@@ -27,3 +27,6 @@ my_sources = [
 
 MIN_WORD_LENGTH = 4
 HOURS_WINDOW = 24
+
+import nltk
+stop_words = set(nltk.corpus.stopwords.words('english') + my_stopwords)

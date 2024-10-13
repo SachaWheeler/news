@@ -5,13 +5,11 @@ from datetime import datetime, timedelta
 from pygooglenews import GoogleNews
 import re
 import string
-import nltk
+# import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from utils import my_stopwords, my_sources, MIN_WORD_LENGTH, HOURS_WINDOW
+from utils import stop_words, my_sources, MIN_WORD_LENGTH, HOURS_WINDOW
 
-
-stop_words = set(nltk.corpus.stopwords.words('english') + my_stopwords)
 
 def fetch_headlines():
     gn = GoogleNews(lang='en', country='UK')
@@ -35,16 +33,8 @@ def fetch_headlines():
 
     return articles
 
-"""
-def headline_exists(c, title):
-    c.execute("SELECT 1 FROM headlines WHERE title = ?", (title,))
-    return c.fetchone() is not None
-"""
-
 def clean_headline(headline):
-    # Remove punctuation and convert to lowercase
     cleaned = headline.translate(str.maketrans('', '', string.punctuation)).lower()
-    # Remove stopwords
     cleaned_words = [word for word in cleaned.split()
             if word not in stop_words and len(word) >= MIN_WORD_LENGTH]
     return ' '.join(cleaned_words)
@@ -59,12 +49,9 @@ def fetch_previous_day_headlines(c):
 
     rows = c.fetchall()
 
-    # Return a list of headline strings
     return [row[0] for row in rows]
 
-
 def headline_exists(c, current_headline):
-    # Fetch and clean previous day headlines
     previous_day_headlines = fetch_previous_day_headlines(c)
     cleaned_previous_headlines = [clean_headline(h) for h in previous_day_headlines]
 

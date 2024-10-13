@@ -12,6 +12,7 @@ my_stopwords = [
     'fantasy', 'football', 'cricket', 'rugby', 'league',
     'could', 'might',
     'see', 'man', 'week', 'says', 'video',
+    'arsenal', 'chelsea',
 ]
 
 my_sources = [

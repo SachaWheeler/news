@@ -113,4 +113,3 @@ def analyze_headlines():
 # Run the analysis
 if __name__ == "__main__":
     analyze_headlines()
-from utils import stop_words, MIN_WORD_LENGTH, HOURS_WINDOW

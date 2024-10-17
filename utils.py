@@ -13,6 +13,7 @@ my_stopwords = [
     'could', 'might',
     'see', 'man', 'week', 'says', 'video',
     'arsenal', 'chelsea',
+    'scotland',
 ]
 
 my_sources = [
